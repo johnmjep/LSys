@@ -1,4 +1,5 @@
-﻿namespace LSys
+
+namespace LSys
 {
     public partial class Module
     {
@@ -17,6 +18,9 @@
         private static readonly Module _penUp = new Module("U");
         private static readonly Module _penDown = new Module("D");
 
+        private static readonly Module _positionQuery = new Module("?P", new object[] { double.NaN, double.NaN });
+        private static readonly Module _insertionQuery = new Module("?I", new object[2]);
+
         public static Module Empty { get { return new Module(_empty); } }
         public static Module Forward { get { return new Module(_forward); } }
         public static Module ForwardBlank { get { return new Module(_forwardBlank); } }
@@ -31,5 +35,8 @@
         public static Module PopStack { get { return new Module(_popStack); } }
         public static Module PenUp { get { return new Module(_penUp); } }
         public static Module PenDown { get { return new Module(_penDown); } }
+
+        public static Module PositionQuery { get { return new Module(_positionQuery); } }
+        public static Module InsertionQuery { get { return new Module(_insertionQuery); } }
     }
 }
