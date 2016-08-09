@@ -1,9 +1,5 @@
-﻿using System;
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TurtleGraph2D;
 
 namespace LSys
@@ -15,7 +11,7 @@ namespace LSys
     {
         #region Fields
         public string Name { get; private set; }
-        public object[] Parameters;
+        public object[] Parameters;        
 
         public object this[int i]
         {
@@ -29,15 +25,14 @@ namespace LSys
         /// Constructor
         /// </summary>
         /// <param name="name">Module name</param>
-        public Module(string name)
-            : this(name, null)
-        { }
+        public Module(string name) 
+            : this(name , null) { }
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="module">Module to copy</param>
-        public Module(Module module)
-            : this(module.Name, module.Parameters)
+        public Module(Module module) 
+            : this (module.Name, module.Parameters) 
         { }
         /// <summary>
         /// Constructor
@@ -73,7 +68,7 @@ namespace LSys
                 foreach (double d in Parameters)
                 {
                     retStr += string.Format("{0:0.00} ", d);
-                }
+                } 
             }
             return retStr;
         }
@@ -115,7 +110,7 @@ namespace LSys
         {
             string parameters = "";
             if (Parameters != null)
-            {
+            {                
                 parameters = "(" + string.Join(",", Parameters) + ")";
             }
             return parameters;
@@ -132,7 +127,7 @@ namespace LSys
             {
                 try
                 {
-                    if (Parameters[i] is double)
+                    if(Parameters[i] is double)
                     {
                         retArr[i] = (double)Parameters[i];
                     }
@@ -143,7 +138,7 @@ namespace LSys
                 }
                 catch (FormatException exc)
                 {
-                    Console.WriteLine("XXX Encountered Format Exception parsing Module Pqrameters");
+                    Console.WriteLine("XXX Encountered Format Exception parsing Module Parameters");
                     Console.WriteLine("XXX Message: {0}", exc.Message);
                     Console.WriteLine("XXX Source: {0}", exc.Source);
                     Console.WriteLine("XXX Stack: {0}", exc.StackTrace);
@@ -151,6 +146,15 @@ namespace LSys
                 }
             }
             return retArr;
+        }
+
+        /// <summary>
+        /// Returns true if Module is a query
+        /// </summary>
+        /// <returns>True if Module is a query</returns>
+        public bool IsQuery()
+        {
+            return (Name[0] == '?');
         }
 
         /// <summary>
