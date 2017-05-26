@@ -95,25 +95,10 @@ namespace LSys
         /// <returns>True if this Production applies</returns>
         public bool AppliesTo(Module leftContext, Module predecessor, Module rightContext)
         {
-            // TODO: Tidy up and improve robustness
             bool appliesTo = true;
-            if (StrictPredecessor.Name == predecessor.Name && StrictPredecessor.Parameters.Length == predecessor.Parameters.Length)
+            if (StrictPredecessorMatch(predecessor))
             {
-                if (LeftContext != null)
-                {
-                    if (leftContext == null || LeftContext.Name != leftContext.Name)
-                    {
-                        appliesTo = false;
-                    }
-                }
-                if (RightContext != null)
-                {
-                    if (rightContext == null || RightContext.Name != rightContext.Name)
-                    {
-                        appliesTo = false;
-                    }
-                }
-                if (appliesTo != false && Condition != null && !Condition(leftContext, predecessor, rightContext))
+                if (!LeftContextMatch(leftContext) || !RightContextMatch(rightContext) || ! ConditionCheck(leftContext, predecessor, rightContext))
                 {
                     appliesTo = false;
                 } 
@@ -123,6 +108,67 @@ namespace LSys
                 appliesTo = false;
             }
             return appliesTo;
+        }
+
+        /// <summary>
+        /// Checks if the predecessor matches the provided
+        /// </summary>
+        /// <param name="predecessor">Predecessor Module to check</param>
+        /// <returns>True if matches</returns>
+        private bool StrictPredecessorMatch(Module predecessor)
+        {
+            return (StrictPredecessor.Name == predecessor.Name && StrictPredecessor.Parameters.Length == predecessor.Parameters.Length);
+        }
+
+        /// <summary>
+        /// Checks if the provided left context matches the production left context
+        /// </summary>
+        /// <param name="leftContext">Left Context Module to check</param>
+        /// <returns>True if matches</returns>
+        private bool LeftContextMatch(Module leftContext)
+        {
+            return ContextMatchCheck(LeftContext, leftContext);
+        }
+
+        /// <summary>
+        /// Checks if the provided right context matches the production right context
+        /// </summary>
+        /// <param name="rightContext">Right Context Module to check</param>
+        /// <returns>True if matches</returns>
+        private bool RightContextMatch(Module rightContext)
+        {
+            return ContextMatchCheck(RightContext, rightContext);
+        }
+
+        /// <summary>
+        /// Checks the provided contexts against each other
+        /// </summary>
+        /// <param name="localContext">The selected contect from this module</param>
+        /// <param name="contextToCheckAgainst">The context were checking</param>
+        /// <returns>True if match</returns>
+        private bool ContextMatchCheck(Module localContext, Module contextToCheckAgainst)
+        {
+            bool match = true;
+            if (localContext != null)
+            {
+                if (contextToCheckAgainst == null || localContext.Name != contextToCheckAgainst.Name)
+                {
+                    match = false;
+                }
+            }
+            return match;
+        }
+
+        /// <summary>
+        /// Checks if the condition for applying the production is met
+        /// </summary>
+        /// <param name="leftContext">Left context of the predecessor</param>
+        /// <param name="predecessor">The predecessor</param>
+        /// <param name="rightContext">Right context of the predecessor</param>
+        /// <returns>True if the condition is met</returns>
+        private bool ConditionCheck(Module leftContext, Module predecessor, Module rightContext)
+        {
+            return (Condition == null || Condition(leftContext, predecessor, rightContext));
         }
 
         /// <summary>
