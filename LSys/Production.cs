@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace LSys
 {
+    public delegate void ParameterActionDelegate(List<Module> successor, Module leftContext, Module strictPredecessor, Module rightContext, int generation);
+    public delegate bool ConditionDelegate(Module leftContext, Module strictPredecessor, Module rightContext);
+    
     /// <summary>
     /// Class to define an L-System Production
     /// </summary>
@@ -15,8 +18,8 @@ namespace LSys
         public Module LeftContext { get; private set; }
         public Module StrictPredecessor { get; private set; }
         public Module RightContext { get; private set; }
-        public Func<Module, Module, Module, bool> Condition { get; private set; }
-        public Action<List<Module>, Module, Module, Module, int> ParameterAction { get; private set; }
+        public ConditionDelegate Condition { get; private set; }
+        public ParameterActionDelegate ParameterAction { get; private set; }
         private List<Module> _successor;
         public List<Module> Successor
         {
@@ -160,7 +163,7 @@ namespace LSys
         /// </summary>
         /// <param name="condition">Condition Func</param>
         /// <returns>This production for method chaining</returns>
-        public Production SetCondition(Func<Module, Module, Module, bool> condition)
+        public Production SetCondition(ConditionDelegate condition)
         {
             Condition = condition;
             return this;
@@ -171,7 +174,7 @@ namespace LSys
         /// </summary>
         /// <param name="pAction">Successor Parameter Action</param>
         /// <returns>This production for method chaining</returns>
-        public Production SetParameterAction(Action<List<Module>, Module, Module, Module, int> pAction)
+        public Production SetParameterAction(ParameterActionDelegate pAction)
         {
             ParameterAction = pAction;
             return this;
